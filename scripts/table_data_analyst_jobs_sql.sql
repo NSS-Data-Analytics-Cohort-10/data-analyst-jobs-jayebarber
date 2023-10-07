@@ -50,14 +50,37 @@ FROM data_analyst_jobs
 WHERE review_count > 5000;
 -- 185 companies with review count > 5000
 -- 10.	Add the code to order the query in #9 from highest to lowest average star rating. Which company with more than 5000 reviews across all locations in the dataset has the highest star rating? What is that rating?
-SELECT COUNT(*) AS company, COUNT(*) AS star_rating  
+SELECT company, AVG(star_rating) AS avg_stars
 FROM data_analyst_jobs
 WHERE review_count > 5000
-ORDER BY star_rating DESC;
+AND company IS NOT NULL
+GROUP BY company
+ORDER by avg_stars DESC;
+-- ANSWER: Tie between 6 companies and the avg rating is 4.19999980900000000
+
 -- 11.	Find all the job titles that contain the word â€˜Analystâ€™. How many different job titles are there? 
+SELECT (title)
+FROM data_analyst_jobs
+WHERE (title) LIKE '%Analyst%'
+-- 1636 Job titles (including duplicates)
+
+SELECT DISTINCT (title)
+FROM data_analyst_jobs
+WHERE (title) LIKE '%Analyst%'
+-- 754 Unique titles
+
+SELECT DISTINCT LOWER (title)
+FROM data_analyst_jobs
+WHERE LOWER (title) LIKE '%analyst%'
 
 -- 12.	How many different job titles do not contain either the word â€˜Analystâ€™ or the word â€˜Analyticsâ€™? What word do these positions have in common?
-
+SELECT DISTINCT(title) 
+FROM data_analyst_jobs
+WHERE LOWER (title) NOT LIKE '%analyst%'
+ AND LOWER (title) NOT LIKE '%analytics%'
+ -- Answer: 4	
+ -- Tableau(common title)
+ 
 -- **BONUS:**
 -- You want to understand which jobs requiring SQL are hard to fill. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks. 
 --  - Disregard any postings where the domain is NULL. 
